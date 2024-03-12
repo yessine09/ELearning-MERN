@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="26" height="21" viewBox="0 0 26 26">
+  <g id="_01592524a053b3f69dd97af2fa8c5297" data-name="01592524a053b3f69dd97af2fa8c5297" transform="translate(0 -0.648)">
+    <rect id="Rectangle_151" data-name="Rectangle 151" width="26" height="26" transform="translate(0 0.648)" fill="none"/>
+    <line id="Ligne_24" data-name="Ligne 24" x2="7" transform="translate(10 9.648)" fill="none" stroke="#189ab4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <line id="Ligne_25" data-name="Ligne 25" x2="7" transform="translate(10 13.648)" fill="none" stroke="#189ab4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <line id="Ligne_26" data-name="Ligne 26" x2="3" transform="translate(10 16.648)" fill="none" stroke="#189ab4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <path id="Tracé_98" data-name="Tracé 98" d="M52.084,58.227H40.828A.828.828,0,0,1,40,57.4V40.828A.828.828,0,0,1,40.828,40H57.4a.828.828,0,0,1,.828.828V52.084a.828.828,0,0,1-.243.586L52.67,57.984A.829.829,0,0,1,52.084,58.227Z" transform="translate(-35.858 -35.721)" fill="none" stroke="#189ab4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+    <path id="Tracé_99" data-name="Tracé 99" d="M165.724,159.992H160v5.725" transform="translate(-143.43 -143.286)" fill="none" stroke="#189ab4" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"/>
+  </g>
+</svg>

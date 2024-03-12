@@ -1,0 +1,46 @@
+.buttonContainer {
+    display: flex;
+    width: 70px;
+    height: 20px;
+  }
+   .dayItem {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px;
+     
+    }
+  
+  .menu-item {
+      color: #05445E;
+    padding: 0 4px;
+    margin: 10px 20px;
+    user-select: none;
+    cursor: pointer;
+    border: none;
+    font-family:inherit;
+    font-size: 20px;
+    font-weight: 100;
+   ;
+    
+  }
+  .menu-item-wrapper.active {
+   
+    border-radius: 10px;
+    background-color: #dbf1f4;
+  }
+  .menu-item.today {
+    & .text {
+      color: #05445E;
+      border-bottom:4px solid #349eeb;
+      font-size:'18px';
+    
+    }
+  }
+  .title{
+     
+      font-family:'Segoe UI';
+      font-size: '15px';
+      font-weight: lighter;
+  }

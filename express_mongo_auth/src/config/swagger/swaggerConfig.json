@@ -1,0 +1,1873 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "Shape REST API Documentation",
+        "version": "1.0.0"
+    },
+    "schemes": [
+        "http"
+    ],
+    "servers": [
+        {
+            "url": "http://localhost:5000",
+            "description": "Development server"
+        },
+        {
+            "url": "http://18.184.143.238:5000/",
+            "description": "Staging EC2 server"
+        }
+    ],
+    "tags": [
+        {
+            "name": "Program"
+        },
+        {
+            "name": "Auth"
+        },
+        {
+            "name": "ShaperProfile"
+        }
+    ],
+    "paths": {
+        "/auth/roleauthorization/{roleId}": {
+            "get": {
+                "tags": [
+                    "Auth"
+                ],
+                "parameters": [
+                    {
+                        "name": "roleId",
+                        "in": "path",
+                        "description": "ID of the role to get authorization for",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Role authorization retrieved successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Role not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "requestBody": {
+                    "description": "User registration details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "outail619@gmail.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "Testtest1"
+                                    },
+                                    "firstName": {
+                                        "type": "string",
+                                        "example": "Outail"
+                                    },
+                                    "lastName": {
+                                        "type": "string",
+                                        "example": "Euwnay"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User registered successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/User"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "409": {
+                        "description": "User already exists",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Authenticate user with email and password",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "description": "User's email"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "description": "User's password"
+                                    }
+                                },
+                                "required": [
+                                    "email",
+                                    "password"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "User authenticated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "accessToken": {
+                                            "type": "string",
+                                            "description": "JWT access token"
+                                        },
+                                        "refreshToken": {
+                                            "type": "string",
+                                            "description": "JWT refresh token"
+                                        },
+                                        "expiresIn": {
+                                            "type": "integer",
+                                            "description": "Time until expiration in seconds"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication failed due to invalid credentials"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Logout user",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "User logged out successfully"
+                    },
+                    "401": {
+                        "description": "Authentication failed or missing credentials"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/auth/refresh_token": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Refresh JWT access token",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "refreshToken": {
+                                        "type": "string",
+                                        "description": "JWT refresh token"
+                                    }
+                                },
+                                "required": [
+                                    "refreshToken"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "JWT access token refreshed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "accessToken": {
+                                            "type": "string",
+                                            "description": "JWT access token"
+                                        },
+                                        "expiresIn": {
+                                            "type": "integer",
+                                            "description": "Time until expiration in seconds"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Authentication failed or missing credentials"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/auth/forget_passwordByfn": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Forget password by First Name and Last Name",
+                "description": "Forget user password by first name and last name",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "firstName": {
+                                        "type": "string",
+                                        "description": "User's first name"
+                                    },
+                                    "lastName": {
+                                        "type": "string",
+                                        "description": "User's last name"
+                                    }
+                                },
+                                "required": [
+                                    "firstName",
+                                    "lastName"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Reset password email sent successfully"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/auth/forget_passwordByEmail": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Request a password reset email",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {}
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset email sent"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/auth/verify_code": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Verify the code sent to the user",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {}
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Code verified successfully"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/auth/reset_Password": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Reset the password using the code sent to the user",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {}
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Password reset successfully"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/auth/verify_email": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Send verification email to the user",
+                "responses": {
+                    "200": {
+                        "description": "Verification email sent successfully"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/auth/confirm_email": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Confirm user's email address",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {}
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Email confirmed successfully"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/profiling/save": {
+            "post": {
+                "tags": [
+                    "ShaperProfile"
+                ],
+                "summary": "Creates a profile",
+                "responses": {
+                    "200": {
+                        "description": "Profile created successfully"
+                    }
+                },
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {}
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/profiling/info": {
+            "get": {
+                "tags": [
+                    "ShaperProfile"
+                ],
+                "summary": "Creates a profile",
+                "responses": {
+                    "200": {
+                        "description": "Profile created successfully"
+                    }
+                }
+            }
+        },
+        "/profiling/update": {
+            "post": {
+                "tags": [
+                    "ShaperProfile"
+                ],
+                "summary": "Updates a profile",
+                "responses": {
+                    "200": {
+                        "description": "Profile updated successfully"
+                    }
+                },
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {}
+                        }
+                    },
+                    "required": true
+                }
+            }
+        },
+        "/profiling/upload/avatar": {
+            "post": {
+                "tags": [
+                    "ShaperProfile"
+                ],
+                "summary": "Uploads an avatar image for the profile",
+                "responses": {
+                    "200": {
+                        "description": "Avatar uploaded successfully"
+                    }
+                },
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "avatar": {
+                                        "type": "string",
+                                        "format": "binary"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/profiling/avatar/{fileKey}": {
+            "get": {
+                "tags": [
+                    "ShaperProfile"
+                ],
+                "summary": "Downloads the avatar image for the profile",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "fileKey",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "description": "The file key of the avatar image"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Avatar downloaded successfully"
+                    }
+                }
+            }
+        },
+        "/program/create": {
+            "post": {
+                "summary": "Create a new program",
+                "tags": [
+                    "Program"
+                ],
+                "requestBody": {
+                    "description": "Program object to be created",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "$/../../../models/programModels/program.ts"
+                            },
+                            "example": {
+                                "title": "My Program",
+                                "description": "This is a program description.",
+                                "createdBy": "614885cb131c2498364e0fe9",
+                                "status": "published",
+                                "weeks": [
+                                    {
+                                        "start": "2023-04-25T00:00:00.000Z",
+                                        "end": "2023-05-01T00:00:00.000Z",
+                                        "lessons": [
+                                            {
+                                                "title": "My Lesson 1",
+                                                "description": "This is the first lesson.",
+                                                "videoUrl": "https://example.com/my-video-1.mp4"
+                                            },
+                                            {
+                                                "title": "My Lesson 2",
+                                                "description": "This is the second lesson.",
+                                                "videoUrl": "https://example.com/my-video-2.mp4"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "$/../../../models/programModels/program.ts"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/program/list/{id}": {
+            "get": {
+                "tags": [
+                    "Program"
+                ],
+                "summary": "Get program by ID",
+                "description": "Returns a single program",
+                "operationId": "getProgramById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the program to return",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Program"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Program not found"
+                    }
+                }
+            }
+        },
+        "/program/list": {
+            "get": {
+                "tags": [
+                    "Program"
+                ],
+                "summary": "Get all programs",
+                "description": "Returns a list of programs",
+                "operationId": "getAllPrograms",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Program"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Program"
+                ],
+                "summary": "Update program by ID",
+                "description": "Updates a single program",
+                "operationId": "updateProgram",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the program to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/Program"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Program"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Program not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Program"
+                ],
+                "summary": "Delete program by ID",
+                "description": "Deletes a single program",
+                "operationId": "deleteProgram",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the program to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Program not found"
+                    }
+                }
+            }
+        },
+        "/program/list/{id}/lessons/add": {
+            "post": {
+                "tags": [
+                    "Program"
+                ],
+                "summary": "Add lessons to a program",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "Program ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {}
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Lessons successfully added to program"
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/program/list/{id}/lessons": {
+            "get": {
+                "tags": [
+                    "Program"
+                ],
+                "summary": "Get all lessons for a program",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "Program ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lessons successfully retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Lesson"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/program/list/{id}/week/{week}": {
+            "get": {
+                "tags": [
+                    "Program"
+                ],
+                "summary": "Get all lessons for a program in a specific week",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "required": true,
+                        "description": "Program ID",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "week",
+                        "required": true,
+                        "description": "Week number",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lessons successfully retrieved",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Lesson"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "500": {
+                        "description": "Internal Server Error"
+                    }
+                }
+            }
+        },
+        "/program/list/{id}/lessons/upload": {
+            "post": {
+                "tags": [
+                    "Program"
+                ],
+                "summary": "Upload a task attachment",
+                "description": "Upload a task attachment for the program with the specified ID",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the program to which the attachment belongs",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "requestBody": {
+                    "content": {
+                        "multipart/form-data": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "file": {
+                                        "type": "string",
+                                        "format": "binary",
+                                        "title": "file"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Attachment successfully uploaded",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "status": {
+                                            "type": "number",
+                                            "example": 201
+                                        },
+                                        "data": {
+                                            "type": "string",
+                                            "description": "Key of the uploaded file"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/program/mentor/list/{programId}": {
+            "get": {
+                "tags": [
+                    "Program"
+                ],
+                "summary": "Get Active Shapers of a Mentor by of a Specified Program",
+                "description": "Returns the shapers and the program",
+                "operationId": "getActiveShapersByProgramAndMentor",
+                "parameters": [
+                    {
+                        "name": "programId",
+                        "in": "path",
+                        "description": "ID of the program",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "program": {
+                                            "$ref": "#/components/schemas/Program"
+                                        },
+                                        "shapers": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Client"
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Program not found"
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "User": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "example": "609896b68e71020023ce89c0"
+                    },
+                    "email": {
+                        "type": "string",
+                        "example": "johndoe@example.com"
+                    },
+                    "password": {
+                        "type": "string",
+                        "example": "password123"
+                    },
+                    "firstName": {
+                        "type": "string",
+                        "example": "John"
+                    },
+                    "lastName": {
+                        "type": "string",
+                        "example": "Doe"
+                    },
+                    "verified": {
+                        "type": "boolean",
+                        "example": true
+                    },
+                    "roles": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Role"
+                        }
+                    }
+                }
+            },
+            "Role": {
+                "type": "object",
+                "properties": {
+                    "_id": {
+                        "type": "string",
+                        "example": "609896b68e71020023ce89bf"
+                    },
+                    "name": {
+                        "type": "string",
+                        "example": "Admin"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Admin user"
+                    }
+                }
+            },
+            "Client": {
+                "title": "Client",
+                "type": "object",
+                "properties": {
+                    "clientId": {
+                        "type": "string"
+                    },
+                    "avatar": {
+                        "type": "string"
+                    },
+                    "softSkills": {
+                        "type": "object",
+                        "properties": {
+                            "data": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "skill": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "skill"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "data"
+                        ]
+                    },
+                    "skillsets": {
+                        "type": "object",
+                        "properties": {
+                            "data": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "skill": {
+                                            "type": "string"
+                                        },
+                                        "level": {
+                                            "type": "string"
+                                        },
+                                        "isSoftSkill": {
+                                            "type": "boolean"
+                                        }
+                                    },
+                                    "required": [
+                                        "skill",
+                                        "level",
+                                        "isSoftSkill"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "data"
+                        ]
+                    },
+                    "studies": {
+                        "type": "object",
+                        "properties": {
+                            "data": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "local": {
+                                            "type": "string"
+                                        },
+                                        "specialty": {
+                                            "type": "string"
+                                        },
+                                        "degree": {
+                                            "type": "string"
+                                        },
+                                        "startDate": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "endDate": {
+                                            "type": "string",
+                                            "format": "date-time"
+                                        },
+                                        "establishment": {
+                                            "type": "string"
+                                        },
+                                        "student": {
+                                            "type": "boolean"
+                                        },
+                                        "document": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "local",
+                                        "specialty",
+                                        "degree",
+                                        "startDate",
+                                        "endDate",
+                                        "establishment",
+                                        "student"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "data"
+                        ]
+                    },
+                    "professional_experience": {
+                        "type": "object",
+                        "properties": {
+                            "data": {
+                                "type": "array",
+                                "items": {
+                                    "type": "object",
+                                    "properties": {
+                                        "company": {
+                                            "type": "string"
+                                        },
+                                        "job": {
+                                            "type": "string"
+                                        },
+                                        "local": {
+                                            "type": "string"
+                                        },
+                                        "period": {
+                                            "type": "string"
+                                        },
+                                        "document": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "required": [
+                                        "company",
+                                        "job",
+                                        "local",
+                                        "period"
+                                    ]
+                                }
+                            }
+                        },
+                        "required": [
+                            "data"
+                        ]
+                    }
+                },
+                "required": [
+                    "clientId",
+                    "softSkills",
+                    "skillsets",
+                    "studies",
+                    "professional_experience"
+                ]
+            },
+            "Mentor": {
+                "type": "object",
+                "properties": {
+                    "studies": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "specialty": {
+                                    "type": "string",
+                                    "example": "Computer Science"
+                                },
+                                "degree": {
+                                    "type": "string",
+                                    "example": "Bachelor's degree"
+                                },
+                                "startDate": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "example": "2022-01-01T00:00:00.000Z"
+                                },
+                                "endDate": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "example": "2022-12-31T23:59:59.999Z"
+                                },
+                                "institution": {
+                                    "type": "string",
+                                    "example": "Example University"
+                                },
+                                "document": {
+                                    "type": "string",
+                                    "example": "https://example.com/documents/123"
+                                }
+                            }
+                        }
+                    },
+                    "professional_experience": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "startDate": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "example": "2022-01-01T00:00:00.000Z"
+                                },
+                                "endDate": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "example": "2022-12-31T23:59:59.999Z"
+                                },
+                                "entreprise": {
+                                    "type": "string",
+                                    "example": "Example Corporation"
+                                },
+                                "document": {
+                                    "type": "string",
+                                    "example": "https://example.com/documents/456"
+                                },
+                                "role": {
+                                    "type": "string",
+                                    "example": "Software Engineer"
+                                }
+                            }
+                        }
+                    },
+                    "courses": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "title": {
+                                    "type": "string",
+                                    "example": "Example Course"
+                                },
+                                "provider": {
+                                    "type": "string",
+                                    "example": "Example Provider"
+                                },
+                                "description": {
+                                    "type": "string",
+                                    "example": "This is an example course."
+                                },
+                                "url": {
+                                    "type": "string",
+                                    "example": "https://example.com/courses/789"
+                                },
+                                "duration": {
+                                    "type": "string",
+                                    "example": "4 weeks"
+                                }
+                            }
+                        }
+                    },
+                    "mentor_type": {
+                        "type": "string",
+                        "example": "EXTERNAL"
+                    },
+                    "user": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "type": "string",
+                                "example": "John Doe"
+                            },
+                            "email": {
+                                "type": "string",
+                                "format": "email",
+                                "example": "john.doe@example.com"
+                            },
+                            "password": {
+                                "type": "string",
+                                "example": "password123"
+                            },
+                            "age": {
+                                "type": "integer",
+                                "example": 30
+                            }
+                        }
+                    }
+                }
+            },
+            "Project": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "description": "Title of the project",
+                        "example": "Build a Web Application"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Description of the project",
+                        "example": "The application will allow users to create, edit and delete tasks"
+                    },
+                    "mentor": {
+                        "type": "string",
+                        "description": "ID of the mentor assigned to the project",
+                        "example": "60c1e5514aa6a7071b4d54e9"
+                    },
+                    "client": {
+                        "type": "string",
+                        "description": "ID of the client for whom the project is being built",
+                        "example": "60c1e5514aa6a7071b4d54e8"
+                    },
+                    "program": {
+                        "type": "string",
+                        "description": "ID of the program under which the project is being built",
+                        "example": "60c1e5514aa6a7071b4d54e7"
+                    },
+                    "tasks": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "description": "ID of a task in the project",
+                            "example": "60c1e5514aa6a7071b4d54e6"
+                        }
+                    },
+                    "status": {
+                        "type": "string",
+                        "description": "Status of the project",
+                        "enum": [
+                            "active",
+                            "completed"
+                        ],
+                        "example": "active"
+                    },
+                    "createdAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Date and time when the project was created",
+                        "example": "2022-05-01T12:30:45.000Z"
+                    },
+                    "updatedAt": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Date and time when the project was last updated",
+                        "example": "2022-05-10T14:30:00.000Z"
+                    }
+                }
+            },
+            "Lesson": {
+                "type": "object",
+                "title": "Lesson",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "description": "Title of the lesson",
+                        "example": "Introduction to JavaScript"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Description of the lesson",
+                        "example": "Learn the basics of JavaScript programming language"
+                    },
+                    "content": {
+                        "type": "string",
+                        "description": "Content of the lesson",
+                        "example": "JavaScript is a scripting or programming language that allows you to implement complex features on web pages"
+                    },
+                    "video": {
+                        "type": "string",
+                        "description": "Link to the video of the lesson",
+                        "example": "https://www.youtube.com/watch?v=fju9ii8YsGs"
+                    },
+                    "duration": {
+                        "type": "number",
+                        "description": "Duration of the lesson in minutes",
+                        "example": 30
+                    },
+                    "references": {
+                        "type": "array",
+                        "description": "Array of references related to the lesson",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+                        ]
+                    },
+                    "keywords": {
+                        "type": "array",
+                        "description": "Array of keywords related to the lesson",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "JavaScript",
+                            "programming",
+                            "web development"
+                        ]
+                    },
+                    "documents": {
+                        "type": "array",
+                        "description": "Array of documents related to the lesson",
+                        "items": {
+                            "type": "string"
+                        },
+                        "example": [
+                            "https://example.com/docs/js-basics.pdf"
+                        ]
+                    },
+                    "challenges": {
+                        "type": "string",
+                        "description": "ID of the quiz challenges related to the lesson",
+                        "example": "6148dc5a9b772f7c00e5696f"
+                    },
+                    "createdBy": {
+                        "type": "string",
+                        "description": "ID of the user who created the lesson",
+                        "example": "6148dc5a9b772f7c00e5696f"
+                    }
+                },
+                "required": [
+                    "title",
+                    "content"
+                ]
+            },
+            "Task": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "example": "Complete Project Proposal"
+                    },
+                    "description": {
+                        "type": "string",
+                        "example": "Write a project proposal for the upcoming software project"
+                    },
+                    "dueDate": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2022-12-31T23:59:59Z"
+                    },
+                    "lesson": {
+                        "type": "string",
+                        "example": "61de734a58b14e98e0c1ef34"
+                    },
+                    "project": {
+                        "type": "string",
+                        "example": "61de73f058b14e98e0c1ef3f"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "Open",
+                            "InProgress",
+                            "Review",
+                            "Closed"
+                        ],
+                        "default": "Open",
+                        "example": "InProgress"
+                    },
+                    "comments": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "sender": {
+                                    "type": "string",
+                                    "example": "61de734a58b14e98e0c1ef34"
+                                },
+                                "content": {
+                                    "type": "string",
+                                    "example": "This looks good, let's finalize it by next week"
+                                },
+                                "date": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "example": "2022-12-30T12:34:56Z"
+                                }
+                            }
+                        },
+                        "example": [
+                            {
+                                "sender": "61de734a58b14e98e0c1ef34",
+                                "content": "Great work so far!",
+                                "date": "2022-12-29T15:22:10Z"
+                            },
+                            {
+                                "sender": "61de73f058b14e98e0c1ef3f",
+                                "content": "Thanks for the update, keep it up!",
+                                "date": "2022-12-30T10:20:05Z"
+                            }
+                        ]
+                    },
+                    "attachments": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "type": "string",
+                                    "example": "Proposal Document"
+                                },
+                                "url": {
+                                    "type": "string",
+                                    "example": "proposal.pdf"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "Program": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "createdBy": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "published",
+                            "archived",
+                            "unpublished"
+                        ]
+                    },
+                    "weeks": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "start": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                },
+                                "end": {
+                                    "type": "string",
+                                    "format": "date-time"
+                                },
+                                "lessons": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "$/../../../models/programModels/lesson.ts"
+                                    }
+                                }
+                            },
+                            "required": [
+                                "start",
+                                "end",
+                                "lessons"
+                            ]
+                        }
+                    }
+                }
+            },
+            "Links": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "url": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "title",
+                    "url"
+                ]
+            },
+            "Staff": {
+                "type": "object",
+                "properties": {
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "role": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "user",
+                    "role"
+                ]
+            },
+            "Enterprise": {
+                "type": "object",
+                "properties": {
+                    "links": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Links"
+                        }
+                    },
+                    "staff": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Staff"
+                        }
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "description": {
+                        "type": "string"
+                    },
+                    "logo": {
+                        "type": "string"
+                    },
+                    "image": {
+                        "type": "string"
+                    },
+                    "dateOfCreation": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "activity": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    },
+                    "licence": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "links",
+                    "staff",
+                    "name",
+                    "description",
+                    "logo",
+                    "image",
+                    "dateOfCreation",
+                    "licence"
+                ]
+            },
+            "Question": {
+                "type": "object",
+                "properties": {
+                    "text": {
+                        "type": "string",
+                        "description": "The text of the question",
+                        "example": "What is the capital city of France?"
+                    },
+                    "type": {
+                        "type": "string",
+                        "enum": [
+                            "multiple-choice",
+                            "true-false",
+                            "short-answer"
+                        ],
+                        "description": "The type of the question",
+                        "example": "multiple-choice"
+                    },
+                    "image": {
+                        "type": "string",
+                        "description": "The image associated with the question",
+                        "example": "https://example.com/image.jpg"
+                    },
+                    "options": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        },
+                        "description": "The available options for the question, if applicable",
+                        "example": [
+                            "Paris",
+                            "London",
+                            "Madrid",
+                            "Rome"
+                        ]
+                    },
+                    "correctOption": {
+                        "type": "array",
+                        "items": {},
+                        "required": true,
+                        "description": "The correct option(s) for the question",
+                        "example": [
+                            "Paris"
+                        ]
+                    }
+                },
+                "required": [
+                    "text",
+                    "type",
+                    "correctOption"
+                ]
+            },
+            "Quiz": {
+                "type": "object",
+                "properties": {
+                    "lessonId": {
+                        "type": "string",
+                        "format": "uuid",
+                        "description": "The ID of the lesson associated with the quiz",
+                        "example": "7b9f28d8-7c23-44a5-87c0-5cb34d702b0e"
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "The title of the quiz",
+                        "example": "Quiz on Lesson 1"
+                    },
+                    "duration": {
+                        "type": "number",
+                        "description": "The duration of the quiz in minutes",
+                        "example": 30
+                    },
+                    "questions": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "format": "uuid",
+                            "description": "The ID of a question in the quiz",
+                            "example": "1a2b3c4d-5e6f-7g8h-9i10-jk11lmno12pq"
+                        },
+                        "description": "The array of IDs of questions in the quiz"
+                    }
+                },
+                "required": [
+                    "lessonId",
+                    "title",
+                    "duration",
+                    "questions"
+                ]
+            },
+            "QuizAnswers": {
+                "type": "object",
+                "properties": {
+                    "lesson": {
+                        "type": "string",
+                        "format": "ObjectId",
+                        "description": "The ID of the Lesson the answers are associated with.",
+                        "example": "615a4a1172be4b4fa14d942c"
+                    },
+                    "client": {
+                        "type": "string",
+                        "format": "ObjectId",
+                        "description": "The ID of the Client who answered the questions.",
+                        "example": "615a4a1172be4b4fa14d942d"
+                    },
+                    "question": {
+                        "type": "string",
+                        "format": "ObjectId",
+                        "description": "The ID of the Question being answered.",
+                        "example": "615a4a1172be4b4fa14d942e"
+                    },
+                    "score": {
+                        "type": "number",
+                        "description": "The score the client received for this answer.",
+                        "example": 2
+                    },
+                    "answers": {
+                        "type": "array",
+                        "description": "The client's answers to the question.",
+                        "items": {
+                            "type": "array",
+                            "items": {
+                                "oneOf": [
+                                    {
+                                        "type": "string",
+                                        "example": "Answer choice 1"
+                                    },
+                                    {
+                                        "type": "boolean",
+                                        "example": true
+                                    },
+                                    {
+                                        "type": "string",
+                                        "example": "Short answer response"
+                                    }
+                                ]
+                            }
+                        },
+                        "example": [
+                            [
+                                "Answer choice 1",
+                                "Answer choice 2"
+                            ],
+                            [
+                                false
+                            ],
+                            [
+                                "Short answer response"
+                            ]
+                        ]
+                    }
+                },
+                "required": [
+                    "lesson",
+                    "client",
+                    "question",
+                    "score",
+                    "answers"
+                ]
+            }
+        }
+    }
+}

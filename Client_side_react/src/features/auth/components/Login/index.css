@@ -1,0 +1,73 @@
+/*LoginInComponent styling*/
+.login-form-wrapper {
+  @apply absolute left-[53%] top-[6%] flex h-[90%] w-[45%] flex-col rounded-md font-font text-darkBlue shadow-3XL transition duration-300 hover:shadow-xl;
+}
+.login-form-content {
+  @apply flex w-full flex-col items-center gap-4;
+}
+.sign-in-header {
+  @apply mt-[30px] mb-4 text-[2em]  font-bold text-darkBlue;
+}
+
+.buttons-wrapper {
+  @apply flex flex-row items-center justify-between py-[20px] font-font;
+}
+.form-container {
+  @apply flex w-[75%] flex-col  items-center justify-between;
+}
+.input-wrapper {
+  @apply flex w-full flex-col items-start justify-between;
+}
+.custom-input {
+  @apply relative mt-[20px] box-border flex min-h-minH w-full items-center justify-center rounded-[6px] border-[1px] border-inputBorderColor border-[solid] pl-5 pb-[0.4em] font-[1.15rem] placeholder:font-font placeholder:tracking-[1px] placeholder:text-gray-400 focus:border-[solid] focus:border-[#4eb8dd] focus:bg-[#edf8fc] focus:shadow-[0px_2px_10px_rgba(0,0,0,0.1)] focus:outline-none;
+}
+.custombtn {
+  @apply mt-[20px] h-[40px] w-[130px]  rounded-[3px] bg-yellow font-semibold text-darkBlue;
+}
+.separator {
+  @apply flex w-[72%] items-center justify-center gap-[30px] text-[#8B8E98];
+}
+.line {
+  @apply block h-px w-full border-0 bg-[#e8e8e8];
+}
+
+.btn-link {
+  @apply mt-5 text-end text-[1em] text-darkBlue transition-[color] duration-[0.3s]  ease-[ease-out] hover:text-[#ffeba7];
+}
+
+.shaper {
+  @apply mt-[20px] w-full pb-[80px]  text-center text-[#05445E];
+}
+.btn-link2 {
+  @apply w-full font-semibold text-[#FFCC29];
+}
+/* ContentComponent styling*/
+.content-text {
+  @apply w-[300] pt-2 font-font text-[1.1em] font-semibold text-darkBlue;
+}
+
+.content-header {
+  @apply mt-[80px] mb-5 font-font text-[35px] font-semibold text-yellow;
+}
+
+.content-wrapper {
+  @apply absolute right-[55%] top-[30%] flex w-[40%] flex-col items-center;
+}
+.btn1 {
+  @apply relative m-[5px] h-[38px] w-[250px] rounded-[5px] border-[1px] 
+ border-solid  border-fancyBlue p-[0.5em] pl-[12px] text-center text-[13px] text-darkBlue;
+}
+
+.names-wrapper {
+  @apply mr-3 flex w-full items-center justify-around;
+}
+.cancelBtn {
+  @apply mr-4 h-[45px] w-[100px] rounded-[6px] border-[1px] border-inputBorderColor border-[solid] font-bold text-darkBlue;
+}
+.saveBtn {
+  @apply h-[45px] w-[100px] rounded-[6px] border-[1px] border-[solid] bg-yellow font-bold text-darkBlue;
+}
+
+.setting-input {
+  @apply relative mt-[20px] box-border flex min-h-minH w-[550px] items-center justify-center rounded-[6px] border-[1px] border-inputBorderColor border-[solid] pl-5 pb-[0.4em] font-[1.15rem] opacity-60 placeholder:font-font placeholder:tracking-[1px] placeholder:text-gray-400 focus:border-[solid] focus:border-lightBlue focus:bg-[#edf8fc] focus:shadow-[0px_2px_10px_rgba(0,0,0,0.1)] focus:outline-none;
+}

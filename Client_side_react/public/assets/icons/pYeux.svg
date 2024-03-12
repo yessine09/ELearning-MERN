@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="33.32" height="30.889" viewBox="0 0 33.32 30.889">
+  <g id="Groupe_551" data-name="Groupe 551" transform="translate(-1236 -770)">
+    <g id="Layer_2" data-name="Layer 2" transform="translate(1238.139 776)">
+      <path id="Tracé_129" data-name="Tracé 129" d="M16.379,5C10.242,5,5.014,9.731,2.087,14.163l-.5.781.511.781c2.912,4.432,8.14,9.163,14.277,9.163s11.365-4.731,14.291-9.163l.511-.781-.511-.781C27.744,9.731,22.516,5,16.379,5Zm0,17.048c-4.66,0-8.822-3.537-11.365-7.1,2.557-3.566,6.72-7.1,11.365-7.1s8.822,3.537,11.365,7.1C25.2,18.51,21.038,22.048,16.379,22.048Z" fill="#ffcc29"/>
+      <path id="Tracé_130" data-name="Tracé 130" d="M13.683,8a5.683,5.683,0,1,0,5.683,5.683A5.683,5.683,0,0,0,13.683,8Zm0,8.524a2.841,2.841,0,1,1,2.841-2.841A2.841,2.841,0,0,1,13.683,16.524Z" transform="translate(2.696 1.262)" fill="#ffcc29"/>
+    </g>
+    <text id="_1" data-name="1" transform="translate(1236 784)" fill="#ffcc29" font-size="13" font-family="SegoeUI-Semibold, Segoe UI" font-weight="600"><tspan x="0" y="0">1</tspan></text>
+  </g>
+</svg>
